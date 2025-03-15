@@ -1,3 +1,4 @@
+/*
 package org.khanhdunk.web_dat_ve_xem_phim.Entity;
 
 import jakarta.persistence.Entity;
@@ -15,3 +16,4 @@ public class Role {
     private Long  roleId ;
     private String roleName ;
 }
+*/

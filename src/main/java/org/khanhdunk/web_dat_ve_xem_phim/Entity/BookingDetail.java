@@ -18,8 +18,11 @@ public class BookingDetail {
 
     @ManyToOne
     @JoinColumn(name = "Seat_Id")
-    private BookingDetail bookingDetail ;
+    private Seats seats ;
 
+    @ManyToOne
+    @JoinColumn(name = "users_id")
+    private Users user ;
 
     @OneToOne
     @JoinColumn(name = "ShowTime_Id")
