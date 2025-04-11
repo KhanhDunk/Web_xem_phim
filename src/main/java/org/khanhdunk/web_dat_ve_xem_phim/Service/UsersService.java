@@ -1,11 +1,11 @@
 package org.khanhdunk.web_dat_ve_xem_phim.Service;
 
-import io.swagger.models.Response;
+
 import lombok.RequiredArgsConstructor;
 import org.khanhdunk.web_dat_ve_xem_phim.DTO.*;
 import org.khanhdunk.web_dat_ve_xem_phim.Entity.Users;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
+/*import org.springframework.security.core.userdetails.UserDetails;*/
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,18 +13,14 @@ import java.util.List;
 
 public interface UsersService {
 
-    void create (UsersDTO dto);
+    Users create (UsersDTO dto);
 
-    void Update (UsersDTO dto);
+    Users update (UsersDTO dto , Long userId);
 
-    UsersDTO getById(Long id);
-
-    List<UsersDTO> getAll (Integer page , Integer size);
-
-   void login (String username , String password);
+    void delete(Long userId);
+    List<Users> getUser();
 
 
-    ResponseEntity<String> register(UsersDTO dto);
-    /* UserDetails loadUserByUsername(String username) ;*/
+    Users getUserId(Long id);
 
 }

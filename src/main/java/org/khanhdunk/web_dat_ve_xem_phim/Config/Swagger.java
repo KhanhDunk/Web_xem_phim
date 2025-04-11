@@ -1,32 +1,30 @@
 package org.khanhdunk.web_dat_ve_xem_phim.Config;
 
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 
+@Configuration
 public class Swagger {
 
-    @Configuration
-    @EnableSwagger2WebMvc
-    public class SpringFoxConfig {
-        @Bean
-        public Docket api() {
-            return new Docket(DocumentationType.SWAGGER_2)
-                    .select()
-                    .apis(RequestHandlerSelectors.any())
-                    .paths(PathSelectors.any())
-                    .build();
-        }
+    // Cấu hình thông tin chung cho Swagger UI
+    @Bean
+    public OpenAPI customOpenAPI() {
+        return new OpenAPI()
+                .info(new Info()
+                        .title("Web đặt vé xem phim API")
+                        .version("1.0")
+                        .description("Tài liệu API cho hệ thống đặt vé xem phim"));
+    }
 
-
-
+    // Giới hạn package cần quét nếu cần
+    @Bean
+    public GroupedOpenApi publicApi() {
+        return GroupedOpenApi.builder()
+                .group("web-dat-ve-xem-phim")
+                .packagesToScan("org.khanhdunk.web_dat_ve_xem_phim.Controller")
+                .build();
     }
 }

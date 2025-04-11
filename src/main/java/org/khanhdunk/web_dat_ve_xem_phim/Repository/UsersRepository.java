@@ -14,11 +14,11 @@ public interface UsersRepository extends JpaRepository<Users,Long> {
 
   Optional<Users>findByMa(String ma);
   Optional<Users>findById(Long userId);
-  Users findByUserName(String userName) ;
+
 
   boolean existsByUserName(String username);
   boolean existsByEmail(String email);
-
+  Optional<Users> findByUserName(String userName);
 
   Optional<Users> findByEmail(String email) ;
 }

@@ -1,15 +1,13 @@
 package org.khanhdunk.web_dat_ve_xem_phim.DTO;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.http.HttpStatus;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResponseDTO<T> {

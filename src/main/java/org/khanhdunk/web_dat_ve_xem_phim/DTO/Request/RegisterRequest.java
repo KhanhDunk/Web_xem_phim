@@ -1,4 +1,4 @@
-package org.khanhdunk.web_dat_ve_xem_phim.DTO;
+package org.khanhdunk.web_dat_ve_xem_phim.DTO.Request;
 
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -17,6 +17,6 @@ public class RegisterRequest {
 
     private String email ;
     private String fullName ;
-    private Integer phone ;
+    private String phone ;
     private String gender ;
 }
