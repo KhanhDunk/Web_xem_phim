@@ -4,6 +4,8 @@ package org.khanhdunk.web_dat_ve_xem_phim.Controller;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.khanhdunk.web_dat_ve_xem_phim.DTO.*;
+import org.khanhdunk.web_dat_ve_xem_phim.DTO.Request.UserUpdateRequest;
+import org.khanhdunk.web_dat_ve_xem_phim.DTO.Response.UserResponse;
 import org.khanhdunk.web_dat_ve_xem_phim.Entity.Users;
 import org.khanhdunk.web_dat_ve_xem_phim.Repository.UsersRepository;
 import org.khanhdunk.web_dat_ve_xem_phim.Service.UsersService;
@@ -14,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 /*import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;*/
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,6 +53,7 @@ public class UserController {
                .build();
     }
 
+
     @GetMapping("/get")
      private ResponseDTO<List<Users>> getUser(){
         var authentication = SecurityContextHolder.getContext().getAuthentication() ;
@@ -66,7 +70,7 @@ public class UserController {
     }
 
     @GetMapping("/get/{userId}")
-    private ResponseDTO<Users> getUsser(@PathVariable Long userId)
+    private ResponseDTO<Users> getUser(@PathVariable Long userId)
     {
 
        Users getUserId = userService.getUserId(userId);
@@ -78,15 +82,29 @@ public class UserController {
 
     }
 
-    @PutMapping("/update/{userId}")
-     private  ResponseDTO<Users> update(@RequestBody UsersDTO dto, @PathVariable Long userId)
+
+    @GetMapping("/{myInfo}")
+    private ResponseDTO<UsersDTO> getMyInfo()
     {
 
-       Users user= userService.update(dto , userId) ;
-        return ResponseDTO.<Users>builder()
+
+        return ResponseDTO.<UsersDTO>builder()
+                .message("Lấy id người dùng thành công")
+                .status(HttpStatus.OK)
+                .data(userService.getMyInfo())
+                .build();
+
+    }
+
+    @PutMapping("/update/{userId}")
+     private  ResponseDTO<UserResponse> update(@RequestBody UserUpdateRequest request, @PathVariable Long userId)
+    {
+
+
+        return ResponseDTO.<UserResponse>builder()
                 .message("Cập nhật người dùng thành công")
                 .status(HttpStatus.OK)
-                .data(user)
+                .data(userService.update(request , userId))
                 .build();
     }
 

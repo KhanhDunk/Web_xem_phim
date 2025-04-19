@@ -7,10 +7,12 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.khanhdunk.web_dat_ve_xem_phim.Entity.Role_;
+import org.khanhdunk.web_dat_ve_xem_phim.Entity.Role;
+
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -41,7 +43,7 @@ public class UsersDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate birthDay;
 
-    private Role_ role;
+    private Set<Role> role;
 
 
 

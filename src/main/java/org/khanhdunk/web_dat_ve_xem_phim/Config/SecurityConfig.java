@@ -3,7 +3,7 @@ package org.khanhdunk.web_dat_ve_xem_phim.Config;
 
 
 
-import org.khanhdunk.web_dat_ve_xem_phim.Entity.Role_;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -17,6 +17,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -42,10 +43,12 @@ import javax.crypto.spec.SecretKeySpec;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
 
-    private final String[] PUBLIC_ENDPOINTS = {"/auth/**", "/user/account/**"};
+    private final String[] PUBLIC_ENDPOINTS = {"/auth/**", "/user/account/**","/role/**","/permission/**"};
+
 
 
     @Value("${jwt.signer-key}")
@@ -60,18 +63,25 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request ->
 
                         request
-
-                                .requestMatchers(HttpMethod.POST).permitAll()// được truy cập tự do
-                                .requestMatchers(HttpMethod.GET, "/user/account/**")
-                               /* .hasAuthority("ROLE_ADMIN")*/
-                                .hasRole(Role_.ADMIN.name())
-                                //SCOPE_ là tiền tố mặc định trong Spring Security khi bạn dùng OAuth2 JWT và scope được đính kèm trong token.
-                                //Ví dụ: nếu token chứa "scope": "ADMIN" → thì hasAuthority("SCOPE_ADMIN") sẽ hợp lệ.
                                 .requestMatchers("/v3/api-docs/**",
                                         "/swagger-ui/**",
                                         "/swagger-ui.html")
                                 .permitAll()
-                                .anyRequest().authenticated());
+                                .requestMatchers(HttpMethod.POST,PUBLIC_ENDPOINTS).permitAll()// được truy cập tự do
+
+                                .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).authenticated()// yêu cầu người dùng đăng nhập
+                               /* .hasAuthority("ROLE_ADMIN")*/
+                               /* .hasRole(Role_.ADMIN.name())*/
+
+
+                                .anyRequest().authenticated()
+                                //SCOPE_ là tiền tố mặc định trong Spring Security khi bạn dùng OAuth2 JWT và scope được đính kèm trong token.
+                                //Ví dụ: nếu token chứa "scope": "ADMIN" → thì hasAuthority("SCOPE_ADMIN") sẽ hợp lệ.
+
+
+
+                );
+
 
         http.oauth2ResourceServer(oauth2 ->
                 oauth2.jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder())
@@ -109,7 +119,7 @@ public class SecurityConfig {
     JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
         jwtGrantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
-
+        jwtGrantedAuthoritiesConverter.setAuthoritiesClaimName("ROLE");
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
 
          jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
