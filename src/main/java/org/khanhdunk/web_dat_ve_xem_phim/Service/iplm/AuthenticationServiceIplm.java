@@ -11,7 +11,8 @@ import org.khanhdunk.web_dat_ve_xem_phim.DTO.Request.AuthenticationRequest;
 import org.khanhdunk.web_dat_ve_xem_phim.DTO.Response.AuthenticationResponse;
 import org.khanhdunk.web_dat_ve_xem_phim.DTO.Request.IntrospectRequest;
 import org.khanhdunk.web_dat_ve_xem_phim.DTO.Response.IntrospectResponse;
-import org.khanhdunk.web_dat_ve_xem_phim.Entity.Role_;
+import org.khanhdunk.web_dat_ve_xem_phim.Entity.Role;
+
 import org.khanhdunk.web_dat_ve_xem_phim.Entity.Users;
 import org.khanhdunk.web_dat_ve_xem_phim.Repository.UsersRepository;
 import org.khanhdunk.web_dat_ve_xem_phim.Service.AuthenticationService;
@@ -25,6 +26,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Set;
 import java.util.StringJoiner;
 
 @Service
@@ -78,6 +80,7 @@ public class AuthenticationServiceIplm implements AuthenticationService {
 
 
 
+
     @Override
     public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException { // Kiểm tra xem token hợp lệ không
         var token = request.getToken();
@@ -93,15 +96,21 @@ public class AuthenticationServiceIplm implements AuthenticationService {
                 .build();
     }
 
-    private String buildScope(Users user) { // lấy role ra
-        Role_ role = user.getRole(); // get một role
+    private String buildScope(Users user) {
+        StringJoiner stringJoiner = new StringJoiner(" "); // StringJoiner dùng để nối chuỗi lại với nhau bằng dấu cách
 
-        if (role != null) {
-            return role.name(); // hoặc role.toString()
-        }
+        if (!CollectionUtils.isEmpty(user.getRole()))
+            user.getRole().forEach(role -> {
+                stringJoiner.add("ROLE_" + role.getName());
+                if (!CollectionUtils.isEmpty(role.getPermissions()))
+                    role.getPermissions().forEach(permission -> stringJoiner.add(permission.getName()));
+            });
 
-        return "Không có role phù hợp"; // nếu không có role
+        return stringJoiner.toString();
     }
 
 
-}
+    }
+
+
+

@@ -29,4 +29,5 @@ public class GlobalExceptionHandler {
                 return ResponseEntity.badRequest().body(exception.getFieldError().getDefaultMessage());
     }
 
+
 }

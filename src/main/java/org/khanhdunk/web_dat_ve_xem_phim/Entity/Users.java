@@ -8,9 +8,7 @@ import lombok.NoArgsConstructor;
 
 
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Data
@@ -35,9 +33,13 @@ public class Users  {
     private Integer point ;
     private String gender ;
 
-    @Enumerated(EnumType.STRING)
+    @ManyToMany
+    private Set<Role>  role ;
+
+   /* @Enumerated(EnumType.STRING)
     @Column(name = "role")
-    private Role_ role;
+    private Role_ role;*/
 
-
+   /* @ManyToMany
+    private Set<Role> roles ;*/
 }

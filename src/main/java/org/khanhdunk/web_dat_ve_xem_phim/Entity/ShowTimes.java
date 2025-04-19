@@ -24,7 +24,7 @@ public class ShowTimes {
     private LocalDateTime EndTime ;
 
     @OneToOne
-    @JoinColumn(name="Room_Id")
+    @JoinColumn(name="Room_Id")// Tên cột trong bảng giữ khoá ngoại của bảng ShowTimes đến bảng Room
     private Rooms room ;
 
 
