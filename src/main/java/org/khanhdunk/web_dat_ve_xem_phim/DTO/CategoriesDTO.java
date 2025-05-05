@@ -5,11 +5,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class SeatsDTO {
+@AllArgsConstructor
+public class CategoriesDTO {
 
-
-    private Integer SeatNumber ;
-    private String SeatType ;
+    Long categoryId ;
+    String name ;
 }

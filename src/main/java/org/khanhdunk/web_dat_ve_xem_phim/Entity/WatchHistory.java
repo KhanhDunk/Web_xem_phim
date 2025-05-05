@@ -7,32 +7,25 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Date;
-import java.util.Set;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-public class Movies {
+public class WatchHistory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long movieId  ;
-    String title ;
-    String genre ;
-    Long duration ;
-    Date releaseDate ;
-    @Column(columnDefinition = "TEXT")
-    String description ;
-    String language ;
-    String director ;
-    String posterUrl ;
-    String trailerUrl ;
-    String movieUrl ;
+    Long historyId ;
+    LocalDateTime watchedAt ;
 
-    @ManyToMany
-    Set<Categories> movieCatagories;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    Users userId ;
 
+    @ManyToOne
+    @JoinColumn(name = "movie_id")
+    Movies moviesId ;
 }

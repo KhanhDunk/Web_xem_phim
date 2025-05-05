@@ -1,10 +1,10 @@
-package org.khanhdunk.web_dat_ve_xem_phim.DTO.Request;
+package org.khanhdunk.web_dat_ve_xem_phim.DTO.Response;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import jakarta.validation.constraints.NotBlank;
 import lombok.NoArgsConstructor;
 
 
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterRequest {
+public class RegisterResponse {
 
     @NotBlank(message= "Không được để trống")
     @Size(min = 3 , max = 50 , message = "Tên đăng nhập không được dưới 3 và trên 50 ký tự ")

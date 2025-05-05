@@ -4,26 +4,25 @@ package org.khanhdunk.web_dat_ve_xem_phim.Controller;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.khanhdunk.web_dat_ve_xem_phim.DTO.*;
+import org.khanhdunk.web_dat_ve_xem_phim.DTO.Request.RegisterRequest;
+import org.khanhdunk.web_dat_ve_xem_phim.DTO.Request.ResetPasswordRequest;
 import org.khanhdunk.web_dat_ve_xem_phim.DTO.Request.UserUpdateRequest;
+import org.khanhdunk.web_dat_ve_xem_phim.DTO.Response.RegisterResponse;
+import org.khanhdunk.web_dat_ve_xem_phim.DTO.Response.ResetPasswordResponse;
 import org.khanhdunk.web_dat_ve_xem_phim.DTO.Response.UserResponse;
 import org.khanhdunk.web_dat_ve_xem_phim.Entity.Users;
 import org.khanhdunk.web_dat_ve_xem_phim.Repository.UsersRepository;
-import org.khanhdunk.web_dat_ve_xem_phim.Service.UsersService;
+import org.khanhdunk.web_dat_ve_xem_phim.Service.UserService;
 import org.khanhdunk.web_dat_ve_xem_phim.Service.iplm.MailService;
 import org.khanhdunk.web_dat_ve_xem_phim.Service.iplm.UserServiceIpm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 /*import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;*/
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @Slf4j
@@ -34,12 +33,10 @@ public class UserController {
     @Autowired
     private MailService mailService;
 
-
-
     @Autowired
     private UsersRepository usersRepository ;
     @Autowired
-    private UserServiceIpm userService ;
+    private UserService userService ;
 
 
     @PostMapping("/create")
@@ -55,18 +52,18 @@ public class UserController {
 
 
     @GetMapping("/get")
-     private ResponseDTO<List<Users>> getUser(){
-        var authentication = SecurityContextHolder.getContext().getAuthentication() ;
+    private ResponseDTO<List<UserResponse>> getUser() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        log.info("Username : {} " , authentication.getName());
+        log.info("Username : {} ", authentication.getName());
         authentication.getAuthorities().forEach(grantedAuthority -> log.info(grantedAuthority.getAuthority()));
 
-     List<Users> userList = userService.getUser();
-       return  ResponseDTO.<List<Users>>builder()
-               .message("Lấy thành công")
-               .status(HttpStatus.OK)
-               .data(userList)
-               .build();
+        List<UserResponse> userList = userService.getUsers();
+        return ResponseDTO.<List<UserResponse>>builder()
+                .message("Lấy thành công")
+                .status(HttpStatus.OK)
+                .data(userList)
+                .build();
     }
 
     @GetMapping("/get/{userId}")
@@ -83,7 +80,7 @@ public class UserController {
     }
 
 
-    @GetMapping("/{myInfo}")
+    @GetMapping("/{myInfo}") // Lấy thông tin của chính user đó
     private ResponseDTO<UsersDTO> getMyInfo()
     {
 
@@ -118,6 +115,26 @@ public class UserController {
 
                 .message("Xoá thành công")
                 .status(HttpStatus.OK)
+                .build();
+    }
+
+
+    @PostMapping("/register")
+    ResponseDTO<RegisterResponse> register(@RequestBody RegisterRequest request )
+    {
+        var result = userService.register(request);
+        return ResponseDTO.<RegisterResponse>builder()
+                .data(result)
+                .build();
+    }
+
+
+    @PutMapping("/reset-password")
+    public ResponseDTO<ResetPasswordResponse> resetPassword(@RequestBody ResetPasswordRequest request)
+    {
+       var result =  userService.resetPassword(request);
+        return ResponseDTO.<ResetPasswordResponse>builder()
+                .data(result)
                 .build();
     }
 }

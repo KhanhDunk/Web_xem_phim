@@ -11,7 +11,8 @@ import org.khanhdunk.web_dat_ve_xem_phim.DTO.Request.AuthenticationRequest;
 import org.khanhdunk.web_dat_ve_xem_phim.DTO.Request.IntrospectRequest;
 import org.khanhdunk.web_dat_ve_xem_phim.DTO.Response.AuthenticationResponse;
 import org.khanhdunk.web_dat_ve_xem_phim.DTO.Response.IntrospectResponse;
-import org.khanhdunk.web_dat_ve_xem_phim.Service.AuthenticationService;
+import org.khanhdunk.web_dat_ve_xem_phim.Service.iplm.AuthenticationServiceIplm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,11 +26,13 @@ import java.text.ParseException;
 @FieldDefaults(level = AccessLevel.PRIVATE , makeFinal = true )
 public class AuthenticationController {
 
-   final AuthenticationService authenticate ;
+
+    final AuthenticationServiceIplm authenticate ;
     @PostMapping("/token")
     ResponseDTO<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request)
     {
       var result =  authenticate.authenticate(request) ;
+
         return ResponseDTO.<AuthenticationResponse>builder()
                 .data(result)
                 .build();
@@ -43,4 +46,10 @@ public class AuthenticationController {
                 .data(result)
                 .build();
     }
+
+
+
+
+
+
 }

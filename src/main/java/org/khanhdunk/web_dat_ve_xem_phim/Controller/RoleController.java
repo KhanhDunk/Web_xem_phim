@@ -2,13 +2,10 @@ package org.khanhdunk.web_dat_ve_xem_phim.Controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.khanhdunk.web_dat_ve_xem_phim.DTO.Request.PermissionRequest;
 import org.khanhdunk.web_dat_ve_xem_phim.DTO.Request.RoleRequest;
-import org.khanhdunk.web_dat_ve_xem_phim.DTO.Response.PermissionResponse;
 import org.khanhdunk.web_dat_ve_xem_phim.DTO.Response.RoleResponse;
 import org.khanhdunk.web_dat_ve_xem_phim.DTO.ResponseDTO;
-import org.khanhdunk.web_dat_ve_xem_phim.Service.PermissionService;
-import org.khanhdunk.web_dat_ve_xem_phim.Service.iplm.RoleService;
+import org.khanhdunk.web_dat_ve_xem_phim.Service.iplm.RoleServiceIplm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +19,7 @@ import java.util.List;
 public class RoleController {
 
     @Autowired
-  private RoleService roleService ;
+  private RoleServiceIplm roleService ;
 
   @PostMapping("/create")
   ResponseDTO<RoleResponse> create (@RequestBody RoleRequest request)

@@ -20,6 +20,8 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -40,6 +42,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.crypto.spec.SecretKeySpec;
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -47,7 +51,7 @@ import javax.crypto.spec.SecretKeySpec;
 public class SecurityConfig {
 
 
-    private final String[] PUBLIC_ENDPOINTS = {"/auth/**", "/user/account/**","/role/**","/permission/**"};
+    private final String[] PUBLIC_ENDPOINTS = {"/auth/**", "/user/account/**","/role/**","/permission/**","/movies/**","/watchHistory/**","/categories/**"};
 
 
 
@@ -63,10 +67,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request ->
 
                         request
-                                .requestMatchers("/v3/api-docs/**",
-                                        "/swagger-ui/**",
-                                        "/swagger-ui.html")
-                                .permitAll()
+
+                                .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**")
+                        .permitAll()
+
                                 .requestMatchers(HttpMethod.POST,PUBLIC_ENDPOINTS).permitAll()// được truy cập tự do
 
                                 .requestMatchers(HttpMethod.GET, PUBLIC_ENDPOINTS).authenticated()// yêu cầu người dùng đăng nhập
@@ -115,17 +119,31 @@ public class SecurityConfig {
 
     }
 
+
+    // Hàm dùng để converter chuyển đổi thông tin quyền trong JWT Token VD:ROLE_ADMIN\
+    // Tuỳ chỉnh đọc quyền từ JWT
     @Bean
-    JwtAuthenticationConverter jwtAuthenticationConverter() {
-        JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
-        jwtGrantedAuthoritiesConverter.setAuthoritiesClaimName("ROLE");
-        JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
+    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+        JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
+        converter.setJwtGrantedAuthoritiesConverter(jwt -> {
+            String rolesStr = jwt.getClaimAsString("ROLE"); // Lấy chuỗi từ ROLE trong payload
+            List<GrantedAuthority> authorities = new ArrayList<>(); /// nơi lưu các quyền của người dùng để Spring dùng sau này.
 
-         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
+            if (rolesStr != null && !rolesStr.isBlank()) {
+                for (String role : rolesStr.split(" ")) {
+                    authorities.add(new SimpleGrantedAuthority(role.trim()));
+                }
+            }
 
-        return jwtAuthenticationConverter;
+            return authorities;
+        });
+
+        return converter;
     }
+
+        // GrantedAuthority là hasRole hasAuth
+    // Dùng được dùng để chuyển thông tin từ JWT thành đối tượng quyền (GrantedAuthority),
+    // để Spring Security có thể sử dụng trong việc xác thực và phân quyền người dùng.
 }
 
 

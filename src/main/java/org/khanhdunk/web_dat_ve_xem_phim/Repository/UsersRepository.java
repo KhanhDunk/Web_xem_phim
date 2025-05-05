@@ -1,6 +1,7 @@
 package org.khanhdunk.web_dat_ve_xem_phim.Repository;
 
 import org.khanhdunk.web_dat_ve_xem_phim.Entity.Users;
+import org.khanhdunk.web_dat_ve_xem_phim.Entity.WatchHistory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -17,8 +18,11 @@ public interface UsersRepository extends JpaRepository<Users,Long> {
 
 
   boolean existsByUserName(String username);
-  boolean existsByEmail(String email);
+ boolean existsByEmail(String email);
   Optional<Users> findByUserName(String userName);
 
+
   Optional<Users> findByEmail(String email) ;
+
+
 }

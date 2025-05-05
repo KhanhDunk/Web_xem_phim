@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.khanhdunk.web_dat_ve_xem_phim.DTO.Request.PermissionRequest;
 import org.khanhdunk.web_dat_ve_xem_phim.DTO.Response.PermissionResponse;
 import org.khanhdunk.web_dat_ve_xem_phim.DTO.ResponseDTO;
-import org.khanhdunk.web_dat_ve_xem_phim.Service.PermissionService;
+import org.khanhdunk.web_dat_ve_xem_phim.Service.iplm.PermissionServiceIplm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +18,7 @@ import java.util.List;
 public class PermissionController {
 
     @Autowired
-  private   PermissionService permissionService ;
+  private PermissionServiceIplm permissionService ;
 
   @PostMapping("create")
   ResponseDTO<PermissionResponse> create (@RequestBody PermissionRequest request)

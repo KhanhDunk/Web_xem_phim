@@ -9,8 +9,8 @@ import org.khanhdunk.web_dat_ve_xem_phim.DTO.Response.RoleResponse;
 import org.khanhdunk.web_dat_ve_xem_phim.Mapper.RoleMapper;
 import org.khanhdunk.web_dat_ve_xem_phim.Repository.PermissionRepository;
 import org.khanhdunk.web_dat_ve_xem_phim.Repository.RoleRepository;
+import org.khanhdunk.web_dat_ve_xem_phim.Service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -20,7 +20,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RoleService {
+public class RoleServiceIplm implements RoleService {
 
     @Autowired
     RoleRepository roleRepo ;
@@ -29,7 +29,7 @@ public class RoleService {
     @Autowired
     RoleMapper  roleMapper ;
 
-
+    @Override
     public RoleResponse create(RoleRequest request) {
         var role = roleMapper.toRole(request);
 
@@ -45,7 +45,7 @@ public class RoleService {
     }
 
 
-
+    @Override
     public List<RoleResponse> getAll()
     {
         return  roleRepo.findAll()

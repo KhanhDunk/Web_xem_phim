@@ -6,16 +6,18 @@ import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.khanhdunk.web_dat_ve_xem_phim.Config.JwtProperties;
 import org.khanhdunk.web_dat_ve_xem_phim.DTO.Request.AuthenticationRequest;
 import org.khanhdunk.web_dat_ve_xem_phim.DTO.Response.AuthenticationResponse;
 import org.khanhdunk.web_dat_ve_xem_phim.DTO.Request.IntrospectRequest;
 import org.khanhdunk.web_dat_ve_xem_phim.DTO.Response.IntrospectResponse;
-import org.khanhdunk.web_dat_ve_xem_phim.Entity.Role;
 
 import org.khanhdunk.web_dat_ve_xem_phim.Entity.Users;
+import org.khanhdunk.web_dat_ve_xem_phim.Mapper.UserMapper;
 import org.khanhdunk.web_dat_ve_xem_phim.Repository.UsersRepository;
 import org.khanhdunk.web_dat_ve_xem_phim.Service.AuthenticationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,19 +26,25 @@ import org.springframework.util.CollectionUtils;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Collection;
 import java.util.Date;
-import java.util.Set;
 import java.util.StringJoiner;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthenticationServiceIplm implements AuthenticationService {
 
     private final UsersRepository userRepo;
+
+    @Autowired
+    private UserMapper userMapper ;
+
+    @Autowired
+    private PasswordEncoder encoder ;
+
     private final JwtProperties jwtProperties; // Inject từ cấu hình
 
-    @Override
+
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         var user = userRepo.findByUserName(request.getUserName())
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng"));
@@ -56,6 +64,10 @@ public class AuthenticationServiceIplm implements AuthenticationService {
                 .build();
     }
 
+
+
+
+
     private String generateToken(Users user) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
@@ -64,7 +76,9 @@ public class AuthenticationServiceIplm implements AuthenticationService {
                 .issuer("khanhdang.com")
                 .issueTime(new Date())
                 .expirationTime(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)))
+
                 .claim("ROLE",  buildScope(user))
+
                 .build();
 
         Payload payload = new Payload(jwtClaimsSet.toJSONObject());
@@ -81,7 +95,7 @@ public class AuthenticationServiceIplm implements AuthenticationService {
 
 
 
-    @Override
+
     public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException { // Kiểm tra xem token hợp lệ không
         var token = request.getToken();
 
@@ -97,7 +111,7 @@ public class AuthenticationServiceIplm implements AuthenticationService {
     }
 
     private String buildScope(Users user) {
-        StringJoiner stringJoiner = new StringJoiner(" "); // StringJoiner dùng để nối chuỗi lại với nhau bằng dấu cách
+        StringJoiner stringJoiner = new StringJoiner(" ");
 
         if (!CollectionUtils.isEmpty(user.getRole()))
             user.getRole().forEach(role -> {
@@ -108,7 +122,6 @@ public class AuthenticationServiceIplm implements AuthenticationService {
 
         return stringJoiner.toString();
     }
-
 
     }
 

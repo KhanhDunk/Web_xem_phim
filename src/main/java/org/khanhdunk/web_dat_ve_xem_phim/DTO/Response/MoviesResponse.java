@@ -1,30 +1,22 @@
-package org.khanhdunk.web_dat_ve_xem_phim.Entity;
+package org.khanhdunk.web_dat_ve_xem_phim.DTO.Response;
 
-import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import org.khanhdunk.web_dat_ve_xem_phim.DTO.CategoriesDTO;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
-@Entity
-public class Movies {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long movieId  ;
+public class MoviesResponse {
     String title ;
     String genre ;
     Long duration ;
     Date releaseDate ;
-    @Column(columnDefinition = "TEXT")
     String description ;
     String language ;
     String director ;
@@ -32,7 +24,9 @@ public class Movies {
     String trailerUrl ;
     String movieUrl ;
 
-    @ManyToMany
-    Set<Categories> movieCatagories;
+
+
+    Set<CategoriesDTO> categories ;
+
 
 }

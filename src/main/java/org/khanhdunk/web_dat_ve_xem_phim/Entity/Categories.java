@@ -1,25 +1,26 @@
 package org.khanhdunk.web_dat_ve_xem_phim.Entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
-@Entity
+import java.util.Set;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Rooms {
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Entity
+public class Categories {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long RoomId ;
+    Long categoryId ;
+    String name ;
 
-    private Integer RoomNumber ;
-    private Integer Capacity  ;
-
-
-    @ManyToOne
-    @JoinColumn(name = "Cinema_Id")
-    private Cinema cinema ;
+    @ManyToMany
+    Set<Movies> movies;
 }

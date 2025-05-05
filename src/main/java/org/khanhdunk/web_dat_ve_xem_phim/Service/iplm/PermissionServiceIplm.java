@@ -18,7 +18,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PermissionServiceIplm  implements PermissionService {
+public class PermissionServiceIplm implements PermissionService {
 
     @Autowired
     PermissionRepository permissionRepo;

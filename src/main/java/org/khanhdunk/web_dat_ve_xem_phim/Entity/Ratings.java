@@ -1,38 +1,40 @@
 package org.khanhdunk.web_dat_ve_xem_phim.Entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Date;
-import java.util.Set;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-public class Movies {
+public class Ratings {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long movieId  ;
-    String title ;
-    String genre ;
-    Long duration ;
-    Date releaseDate ;
-    @Column(columnDefinition = "TEXT")
-    String description ;
-    String language ;
-    String director ;
-    String posterUrl ;
-    String trailerUrl ;
-    String movieUrl ;
+    Long ratingId ;
 
-    @ManyToMany
-    Set<Categories> movieCatagories;
+    @Min(1)
+    @Max(5)
+    Long rating ;
+
+    LocalDateTime createAt ;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    Users userId ;
+
+    @ManyToOne
+    @JoinColumn(name= "movie_id")
+    Movies moviesId;
 
 }
